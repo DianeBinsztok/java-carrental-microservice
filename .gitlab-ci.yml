@@ -1,0 +1,21 @@
+image: maven:3-jdk-8
+  
+stages:
+  - build
+
+before_script:
+  - apt-get update -qy
+  - apt-get install -y lftp sshpass
+  - chmod +x mvnw
+
+maven-build-deploy:
+  stage: build
+  script: 
+    - echo $CI_COMMIT_REF_NAME
+    - ./mvnw package
+    - ls -l ./target/
+    - mkdir ./target/deploy
+    - mv ./target/*.war ./target/deploy/$CI_COMMIT_REF_NAME.war
+    - ls -l ./target/deploy/
+    - echo "pwd" | sshpass -p $LIVE_PASSWORD sftp -o StrictHostKeyChecking=no $LIVE_USERNAME@$LIVE_HOST
+    - lftp -e "mirror -Rnv ./target/deploy/ webapps/ --ignore-time --parallel=10 --exclude-glob .git* --exclude .git/" -u $LIVE_USERNAME,$LIVE_PASSWORD sftp://$LIVE_HOST
