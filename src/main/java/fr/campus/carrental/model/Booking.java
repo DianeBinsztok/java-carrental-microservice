@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -13,12 +14,12 @@ public class Booking {
     private  int id;
     private int userId;
     private int vehicleId;
-    private String startDate;
-    private String endDate;
+    private Date startDate;
+    private Date endDate;
 
     public Booking(){}
 
-    public Booking(int id, int userId, int vehicleId, String startDate, String endDate){
+    public Booking(int id, int userId, int vehicleId, Date startDate, Date endDate){
         this.id = id;
         this.userId = userId;
         this.vehicleId = vehicleId;
@@ -34,10 +35,10 @@ public class Booking {
     public int getVehicle() {
         return this.vehicleId;
     }
-    public String getStartDate() {
+    public Date getStartDate() {
         return this.startDate;
     }
-    public String getEndDate() {
+    public Date getEndDate() {
         return this.endDate;
     }
 }

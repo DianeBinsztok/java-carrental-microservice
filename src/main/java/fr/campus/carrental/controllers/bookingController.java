@@ -5,6 +5,7 @@ import fr.campus.carrental.model.Booking;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -12,7 +13,7 @@ public class bookingController {
 
     private BookingDao bookingDao;
 
-    public bookingController(){
+    public bookingController() throws ParseException {
         this(new BookingDaoImpl());
     }
     public bookingController(BookingDao bookingDao) {
