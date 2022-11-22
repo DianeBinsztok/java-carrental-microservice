@@ -1,10 +1,9 @@
-package fr.campus.carrental.booking;
+package fr.campus.carrental.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -14,12 +13,12 @@ public class Booking {
     private  int id;
     private int userId;
     private int vehicleId;
-    private Date startDate;
-    private Date endDate;
+    private String startDate;
+    private String endDate;
 
     public Booking(){}
 
-    public Booking(int id, int userId, int vehicleId, Date startDate, Date endDate){
+    public Booking(int id, int userId, int vehicleId, String startDate, String endDate){
         this.id = id;
         this.userId = userId;
         this.vehicleId = vehicleId;
@@ -35,10 +34,10 @@ public class Booking {
     public int getVehicle() {
         return this.vehicleId;
     }
-    public Date getStartDate() {
+    public String getStartDate() {
         return this.startDate;
     }
-    public Date getEndDate() {
+    public String getEndDate() {
         return this.endDate;
     }
 }
