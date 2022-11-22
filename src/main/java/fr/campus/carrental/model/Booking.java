@@ -11,7 +11,7 @@ import java.util.Date;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  int id;
+    private int id;
     private int userId;
     private int vehicleId;
     private Date startDate;
@@ -40,5 +40,26 @@ public class Booking {
     }
     public Date getEndDate() {
         return this.endDate;
+    }
+
+    // JPA repository peut avoir besoin de setters pour créer des clés étrangères (comme userId et vehicleId)
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setVehicleId(int vehicleId) {
+        this.vehicleId = vehicleId;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }
