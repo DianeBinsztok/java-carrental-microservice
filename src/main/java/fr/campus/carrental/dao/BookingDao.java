@@ -19,4 +19,8 @@ public interface BookingDao extends JpaRepository<Booking, Integer> {
     List<Booking> findByUserId(int userId);
     List<Booking> findByVehicleId(int vehicleId);
     //List<Booking> findByDateInterval(Date startDate, Date EndDate);
+//    List<Booking> findByEndDateIsWithin(Date startDate, Date endDate);
+//    List<Booking> findByStartDateIsWithin(Date startDate, Date endDate);
+    List<Booking> findAllByEndDateBetween(Date startDate, Date endDate);
+    List<Booking> findAllByStartDateBetween(Date startDate, Date endDate);
 }

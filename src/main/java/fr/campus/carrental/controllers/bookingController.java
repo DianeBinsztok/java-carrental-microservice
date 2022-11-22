@@ -1,9 +1,12 @@
 package fr.campus.carrental.controllers;
 import fr.campus.carrental.dao.BookingDao;
 import fr.campus.carrental.model.Booking;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -62,9 +65,17 @@ public class bookingController {
         target.ifPresent(bookingDao::delete);
     }
 
-    // Lister les réservations par interval de dates
-//    @GetMapping("/bookings/dateinterval{startDate}-{EndDate}")
-//    public List<Booking> findByDateInterval(@PathVariable Date startDate, @PathVariable Date EndDate){
-//        return bookingDao.findByDateInterval(startDate, EndDate);
-//    }
+        @GetMapping("/bookings/dateinterval/{startDate}/{endDate}")
+    public List<Booking> findByDateInterval(@PathVariable String startDate, @PathVariable String endDate) throws ParseException {
+        List <Booking> result = new ArrayList();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date start = format.parse(startDate);
+        Date end = format.parse(endDate);
+        List<Booking> bookingsStartingWithin = bookingDao.findAllByStartDateBetween(start, end);
+        List<Booking> bookingsEndingWithin = bookingDao.findAllByEndDateBetween(start, end);
+        result.addAll(bookingsStartingWithin);
+        result.addAll(bookingsEndingWithin);
+        return result;
+    }
+
 }
