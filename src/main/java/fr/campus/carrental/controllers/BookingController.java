@@ -1,33 +1,33 @@
 package fr.campus.carrental.controllers;
-import com.sun.jdi.connect.IllegalConnectorArgumentsException;
+//import com.sun.jdi.connect.IllegalConnectorArgumentsException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.campus.carrental.dao.BookingDao;
 import fr.campus.carrental.model.Booking;
-import org.springframework.data.jpa.repository.JpaRepository;
+import fr.campus.carrental.services.BookingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.campus.carrental.ICar;
-import org.campus.carrental.IUser;
-import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-public class bookingController {
-
+public class BookingController {
+    @Autowired
+    private BookingService bookingService;
+    @Autowired
     private BookingDao bookingDao;
-
-    public bookingController(BookingDao bookingDao) {
-        this.bookingDao = bookingDao;
-    }
 
     // Lister toutes les réservations
     @GetMapping("/bookings")
     public List<Booking> GetAllBookings(){
         return bookingDao.findAll();
+    }
+    @GetMapping("/cars")
+    public List<ICar> GetAllVehicles() throws JsonProcessingException {
+        return bookingService.findAll();
     }
 
     // Consulter une réservation si elle existe
@@ -71,27 +71,17 @@ public class bookingController {
 
     @GetMapping("/bookings/dateinterval/{startDate}/{endDate}")
     public List<Booking> findByDateInterval(@PathVariable String startDate, @PathVariable String endDate) throws ParseException {
-        List <Booking> result = new ArrayList();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date start = format.parse(startDate);
-        Date end = format.parse(endDate);
-        List<Booking> bookingsStartingWithin = bookingDao.findAllByStartDateBetween(start, end);
-        List<Booking> bookingsEndingWithin = bookingDao.findAllByEndDateBetween(start, end);
-        result.addAll(bookingsStartingWithin);
-        result.addAll(bookingsEndingWithin);
-        return result;
+        return this.bookingService.findByDateInterval(startDate, endDate);
     }
 
     @GetMapping("/bookings/availability/{vehicleId}/{startDate}/{endDate}")
     public boolean checkIfVehicleIsAvailableInGivenDateInterval(@PathVariable int vehicleId, @PathVariable String startDate, @PathVariable String endDate) throws ParseException {
-        boolean available = true;
-        List<Booking> simultaneousBookings = findByDateInterval(startDate, endDate);
-        for(Booking booking : simultaneousBookings){
-            if(booking.getVehicleId() == vehicleId){
-                available = false;
-            }
-        }
-        return available;
+        return this.bookingService.checkIfVehicleIsAvailableInGivenDateInterval(vehicleId, startDate, endDate);
+    }
+
+    @GetMapping("/booking/{startDate}/{endDate}")
+    public List<ICar> listAllAvailableVehiclesForGivenPeriod(@PathVariable String startDate, @PathVariable String endDate) throws ParseException, JsonProcessingException {
+        return this.bookingService.listAllAvailableVehiclesForGivenPeriod(startDate, endDate);
     }
 
 }

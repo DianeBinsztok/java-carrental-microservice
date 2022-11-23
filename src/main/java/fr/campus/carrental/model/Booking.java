@@ -1,5 +1,7 @@
 package fr.campus.carrental.model;
 
+import net.bytebuddy.utility.RandomString;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
