@@ -1,8 +1,12 @@
 package fr.campus.carrental.controllers;
+import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 import fr.campus.carrental.dao.BookingDao;
 import fr.campus.carrental.model.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.web.bind.annotation.*;
+import org.campus.carrental.ICar;
+import org.campus.carrental.IUser;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
