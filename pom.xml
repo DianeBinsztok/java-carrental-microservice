@@ -68,7 +68,20 @@
 			<artifactId>springfox-boot-starter</artifactId>
 			<version>3.0.0</version>
 		</dependency>
+		<!-- Pour mise en prod -->
+		<dependency>
+			<groupId>org.campus</groupId>
+			<artifactId>carrental</artifactId>
+			<version>1.1</version>
+		</dependency>
 	</dependencies>
+	<repositories>
+		<repository>
+			<id>repsy</id>
+			<name>My Private Maven Repository on Repsy</name>
+			<url>https://repo.repsy.io/mvn/chaya/campus</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>

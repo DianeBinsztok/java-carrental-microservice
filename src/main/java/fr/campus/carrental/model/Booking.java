@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
-public class Booking {
+public class Booking{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -29,10 +29,10 @@ public class Booking {
     public int getId() {
         return this.id;
     }
-    public int getUser() {
+    public int getUserId() {
         return this.userId;
     }
-    public int getVehicle() {
+    public int getVehicleId() {
         return this.vehicleId;
     }
     public Date getStartDate() {

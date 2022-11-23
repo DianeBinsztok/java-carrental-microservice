@@ -65,7 +65,7 @@ public class bookingController {
         target.ifPresent(bookingDao::delete);
     }
 
-        @GetMapping("/bookings/dateinterval/{startDate}/{endDate}")
+    @GetMapping("/bookings/dateinterval/{startDate}/{endDate}")
     public List<Booking> findByDateInterval(@PathVariable String startDate, @PathVariable String endDate) throws ParseException {
         List <Booking> result = new ArrayList();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -76,6 +76,18 @@ public class bookingController {
         result.addAll(bookingsStartingWithin);
         result.addAll(bookingsEndingWithin);
         return result;
+    }
+
+    @GetMapping("/bookings/availability/{vehicleId}/{startDate}/{endDate}")
+    public boolean checkIfVehicleIsAvailableInGivenDateInterval(@PathVariable int vehicleId, @PathVariable String startDate, @PathVariable String endDate) throws ParseException {
+        boolean available = true;
+        List<Booking> simultaneousBookings = findByDateInterval(startDate, endDate);
+        for(Booking booking : simultaneousBookings){
+            if(booking.getVehicleId() == vehicleId){
+                available = false;
+            }
+        }
+        return available;
     }
 
 }
