@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.campus.carrental.dao.BookingDao;
 import fr.campus.carrental.model.Booking;
 import org.campus.carrental.ICar;
+import org.campus.carrental.IUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -21,11 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class BookingService {
@@ -35,6 +35,7 @@ public class BookingService {
 
     //private String carMicroServiceUrl = "http://preprod1.letsco.ovh:60080/ms-3-sim-cars/cars";
     private String carMicroServiceUrl = "http://192.168.1.86:8080/cars";
+    private String userMicroServiceUrl = "http://192.168.1.6:8080/user";
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
@@ -94,5 +95,31 @@ public class BookingService {
         result.addAll(bookingsStartingWithin);
         result.addAll(bookingsEndingWithin);
         return result;
+    }
+
+    // Vérifier que le conducteur a l'âge requis pour la puissance du véhicule
+    public void checkIfUserIsOldEnoughtForCarPower(int userId, int vehicleId){
+
+        // Je récupère la réponse de l'API sous forme de String (JSON) et je la change en liste d'instances de ICar
+        IUser user = this.restTemplate.getForObject(this.userMicroServiceUrl+"/"+userId, IUser.class);
+
+        Map rules = new HashMap<>();
+        rules.put(0,18);
+        rules.put(8,21);
+        rules.put(13,25);
+
+        int usersAge = this.getUsersAge(user.getBirthDate());
+        System.out.println("usersAge => "+ usersAge);
+    }
+
+
+    public int getUsersAge(Date usersBirthDate) {
+        Calendar calendar = Calendar.getInstance();
+        Date currentDate = calendar.getTime();
+        DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        int d1 = Integer.parseInt(formatter.format(usersBirthDate));
+        int d2 = Integer.parseInt(formatter.format(currentDate));
+        int age = (d2 - d1) / 10000;
+        return age;
     }
 }

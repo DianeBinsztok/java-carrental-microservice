@@ -72,6 +72,12 @@ public class BookingController {
         target.ifPresent(bookingDao::delete);
     }
 
+    // Tester l'âge de l'utilisateur
+    @GetMapping("/bookings/checkage/{userId}/{vehicleId}")
+    public void checkIfUserIsOldEnoughtForCarPower(@PathVariable int userId, @PathVariable int vehicleId) throws ParseException {
+        this.bookingService.checkIfUserIsOldEnoughtForCarPower(userId, vehicleId);
+    }
+
     // Afficher toutes les réservations pour un interval de dates donné
     @GetMapping("/bookings/dateinterval/{startDate}/{endDate}")
     public List<Booking> findBookingsByDateInterval(@PathVariable String startDate, @PathVariable String endDate) throws ParseException {
