@@ -57,6 +57,7 @@ public class BookingController {
         return bookingDao.findByVehicleId(vehicleId);
     }
 
+    // Modifier une réservation
     @PutMapping("/booking/update")
     // l'id sera dans le corps de la requête.
     // avec save(), le dao recherchera l'instance à l'id indiqué et le remplacera par la nouvelle instance
@@ -64,15 +65,17 @@ public class BookingController {
         bookingDao.save(newBooking);
     }
 
+    // Supprimer une réservation
     @DeleteMapping("booking/delete/{bookingId}")
     public void deleteBooking(@PathVariable int bookingId){
         Optional<Booking> target = bookingDao.findById(bookingId);
         target.ifPresent(bookingDao::delete);
     }
 
+    // Afficher toutes les réservations pour un interval de dates donné
     @GetMapping("/bookings/dateinterval/{startDate}/{endDate}")
-    public List<Booking> findByDateInterval(@PathVariable String startDate, @PathVariable String endDate) throws ParseException {
-        return this.bookingService.findByDateInterval(startDate, endDate);
+    public List<Booking> findBookingsByDateInterval(@PathVariable String startDate, @PathVariable String endDate) throws ParseException {
+        return this.bookingService.findBookingsByDateInterval(startDate, endDate);
     }
 
     @GetMapping("/bookings/availability/{vehicleId}/{startDate}/{endDate}")

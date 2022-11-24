@@ -45,11 +45,13 @@ public class BookingService {
     @Autowired
     private BookingDao bookingDao;
 
+    // Requêter tous les véhicules
     public List<ICar> findAll() {
         List<ICar> allVehicles = this.restTemplate.getForObject(this.carMicroServiceUrl+"/list", List.class);
         return allVehicles;
     }
 
+    // Lister tous les véhicules disponibles pour une période donnée
     public List<ICar> listAllAvailableVehiclesForGivenPeriod(@PathVariable String startDate, @PathVariable String endDate) throws ParseException, IOException {
 
         // Je récupère la réponse de l'API sous forme de String (JSON) et je la change en liste d'instances de ICar
@@ -70,8 +72,9 @@ public class BookingService {
         return availableVehicles;
     }
 
+    // Vérifier la disponibilité d'un véhicule dans une période donnée
     public boolean checkIfVehicleIsAvailableInGivenDateInterval(int vehicleId, String startDate, String endDate) throws ParseException {
-        List<Booking> simultaneousBookings = findByDateInterval(startDate, endDate);
+        List<Booking> simultaneousBookings = findBookingsByDateInterval(startDate, endDate);
         for(Booking booking : simultaneousBookings){
             if(booking.getVehicleId() == vehicleId){
                 return false;
@@ -80,7 +83,8 @@ public class BookingService {
         return true;
     }
 
-    public List<Booking> findByDateInterval(String startDate, String endDate) throws ParseException {
+    // Afficher toutes les réservations sur une période donnée
+    public List<Booking> findBookingsByDateInterval(String startDate, String endDate) throws ParseException {
                 List <Booking> result = new ArrayList();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date start = format.parse(startDate);
