@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.campus.carrental.ICar;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
@@ -80,7 +81,8 @@ public class BookingController {
     }
 
     @GetMapping("/booking/{startDate}/{endDate}")
-    public List<ICar> listAllAvailableVehiclesForGivenPeriod(@PathVariable String startDate, @PathVariable String endDate) throws ParseException, JsonProcessingException {
+    public List<ICar> listAllAvailableVehiclesForGivenPeriod(@PathVariable String startDate, @PathVariable String endDate) throws ParseException, IOException {
+        System.out.println("1 - Contrôleur - j'entre dans la méthode");
         return this.bookingService.listAllAvailableVehiclesForGivenPeriod(startDate, endDate);
     }
 

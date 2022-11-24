@@ -1,5 +1,6 @@
 package fr.campus.carrental.services;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,8 +40,8 @@ public class BookingService {
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
-
     private RestTemplate restTemplate = new RestTemplate();
+
     @Autowired
     private BookingDao bookingDao;
 
@@ -48,9 +50,18 @@ public class BookingService {
         return allVehicles;
     }
 
-    public List<ICar> listAllAvailableVehiclesForGivenPeriod(@PathVariable String startDate, @PathVariable String endDate) throws ParseException {
-        List<ICar> allVehicles = this.restTemplate.getForObject(this.carMicroServiceUrl+"/list", List.class);
-        List<ICar> availableVehicles = new ArrayList<>();
+    public List<ICar> listAllAvailableVehiclesForGivenPeriod(@PathVariable String startDate, @PathVariable String endDate) throws ParseException, IOException {
+
+        // Je récupère la réponse de l'API sous forme de String (JSON) et je la change en liste d'instances de ICar
+        ResponseEntity<String> responseVehicles = this.restTemplate.getForEntity(this.carMicroServiceUrl+"/list", String.class);
+        ObjectMapper filterVehicles = new ObjectMapper();
+        List<ICar> allVehicles = filterVehicles.readValue(responseVehicles.getBody(), new TypeReference<List<ICar>>(){});
+        // fin du traitement
+
+
+        List<ICar> availableVehicles = new ArrayList<ICar>();
+
+        assert allVehicles != null;
         for(ICar vehicle : allVehicles){
             if(checkIfVehicleIsAvailableInGivenDateInterval(vehicle.getId(), startDate, endDate)){
                 availableVehicles.add(vehicle);
