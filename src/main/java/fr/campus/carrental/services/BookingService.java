@@ -99,7 +99,6 @@ public class BookingService {
 
     // Vérifier que le conducteur a l'âge requis pour la puissance du véhicule
     public void checkIfUserIsOldEnoughtForCarPower(int userId, int vehicleId){
-
         // Je récupère la réponse de l'API sous forme de String (JSON) et je la change en liste d'instances de ICar
         IUser user = this.restTemplate.getForObject(this.userMicroServiceUrl+"/"+userId, IUser.class);
 

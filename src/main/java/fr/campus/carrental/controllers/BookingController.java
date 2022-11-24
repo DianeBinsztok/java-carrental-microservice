@@ -74,7 +74,7 @@ public class BookingController {
 
     // Tester l'âge de l'utilisateur
     @GetMapping("/bookings/checkage/{userId}/{vehicleId}")
-    public void checkIfUserIsOldEnoughtForCarPower(@PathVariable int userId, @PathVariable int vehicleId) throws ParseException {
+    public void checkIfUserIsOldEnoughtForCarPower(@PathVariable int userId, @PathVariable int vehicleId){
         this.bookingService.checkIfUserIsOldEnoughtForCarPower(userId, vehicleId);
     }
 
