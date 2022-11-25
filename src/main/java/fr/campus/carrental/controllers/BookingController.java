@@ -41,8 +41,9 @@ public class BookingController {
     @PostMapping(value = "/bookings")
     // @RequestBody demande à Spring de convertir le corps de la requête HTTP en JSON
     // La requête en JSON sera convertie en objet Car
-    public void addBooking(@RequestBody Booking newBooking){
+    public Booking addBooking(@RequestBody Booking newBooking){
         bookingDao.save(newBooking);
+        return newBooking;
     }
 
     // Lister les réservations par client
@@ -61,8 +62,9 @@ public class BookingController {
     @PutMapping("/booking/update")
     // l'id sera dans le corps de la requête.
     // avec save(), le dao recherchera l'instance à l'id indiqué et le remplacera par la nouvelle instance
-    public void updateBooking(@RequestBody Booking newBooking){
+    public Booking updateBooking(@RequestBody Booking newBooking){
         bookingDao.save(newBooking);
+        return newBooking;
     }
 
     // Supprimer une réservation
@@ -73,9 +75,10 @@ public class BookingController {
     }
 
     // Tester l'âge de l'utilisateur
-    @GetMapping("/bookings/checkage/{userId}/{vehicleId}")
-    public void checkIfUserIsOldEnoughtForCarPower(@PathVariable int userId, @PathVariable int vehicleId){
-        this.bookingService.checkIfUserIsOldEnoughtForCarPower(userId, vehicleId);
+    @GetMapping("/bookings/checkage/{vehicleId}")
+    // Il faut préciser à quel header on passe le token ("Authorization") car il y a plusieurs type différents de header
+    public boolean checkIfUserIsOldEnoughForCarPower(@RequestHeader("Authorization") String UserToken, @PathVariable int vehicleId){
+       return this.bookingService.checkIfUserIsOldEnoughForCarPower(UserToken, vehicleId);
     }
 
     // Afficher toutes les réservations pour un interval de dates donné
@@ -91,7 +94,6 @@ public class BookingController {
 
     @GetMapping("/booking/{startDate}/{endDate}")
     public List<ICar> listAllAvailableVehiclesForGivenPeriod(@PathVariable String startDate, @PathVariable String endDate) throws ParseException, IOException {
-        System.out.println("1 - Contrôleur - j'entre dans la méthode");
         return this.bookingService.listAllAvailableVehiclesForGivenPeriod(startDate, endDate);
     }
 

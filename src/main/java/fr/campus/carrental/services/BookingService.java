@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -98,27 +99,26 @@ public class BookingService {
     }
 
     // Vérifier que le conducteur a l'âge requis pour la puissance du véhicule
-    public void checkIfUserIsOldEnoughtForCarPower(int userId, int vehicleId){
-        // Je récupère la réponse de l'API sous forme de String (JSON) et je la change en liste d'instances de ICar
-        IUser user = this.restTemplate.getForObject(this.userMicroServiceUrl+"/"+userId, IUser.class);
-
-        Map rules = new HashMap<>();
-        rules.put(0,18);
-        rules.put(8,21);
-        rules.put(13,25);
-
-        int usersAge = this.getUsersAge(user.getBirthDate());
+    public boolean checkIfUserIsOldEnoughForCarPower(String UserToken, int vehicleId){
+        // Je donne un id de user en dur pour l'instant. il sera remplacé par "me"
+        IUser user = this.restTemplate.getForObject(this.userMicroServiceUrl+"/1",  IUser.class);
+        ICar car = this.restTemplate.getForObject(this.carMicroServiceUrl+"/"+vehicleId,  ICar.class);
+        int usersAge = user.getAge();
+        int carPower = car.getFiscalPower();
         System.out.println("usersAge => "+ usersAge);
+        System.out.println("carPower => "+ carPower);
+        if(usersAge < 18){
+            return false;
+        } else if ( usersAge < 21) {
+            if(carPower>=8){
+                return false;
+            }
+        }else if( usersAge < 25){
+            if(carPower>=13){
+                return false;
+            }
+        }
+         return true;
     }
 
-
-    public int getUsersAge(Date usersBirthDate) {
-        Calendar calendar = Calendar.getInstance();
-        Date currentDate = calendar.getTime();
-        DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        int d1 = Integer.parseInt(formatter.format(usersBirthDate));
-        int d2 = Integer.parseInt(formatter.format(currentDate));
-        int age = (d2 - d1) / 10000;
-        return age;
-    }
 }
