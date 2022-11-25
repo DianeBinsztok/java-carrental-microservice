@@ -5,8 +5,10 @@ import org.springframework.boot.autoconfigure.*;
 
 /** https://developer.okta.com/blog/2019/04/16/spring-boot-tomcat */
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
+@EnableSwagger2
 public class CarRentalApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
